@@ -2,24 +2,29 @@
 <html>
   <head>
     <title>CrowdSource</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
   </head>
-  <body>
-  <h4>Welcome to CrowdSource</h4>
-  <div id="connection-count"></div>
-  <h5>Insert Poll Question here.</h5>
-  <h5>Click a button to vote!</h5>
-  <br>
+  <body class="text-center">
+  <div class="container">
+    <div class="well">
+      <h4>Welcome to CrowdSource</h4>
+      <div id="connection-count"></div>
+      <h5>Insert Poll Question here.</h5>
+      <h5>Click a button to vote!</h5>
+      <br>
 
-    <div id="choices">
-      <button>A</button>
-      <button>B</button>
-      <button>C</button>
-      <button>D</button>
+      <div id="choices">
+        <button class="btn btn-primary">A</button>
+        <button class="btn btn-primary">B</button>
+        <button class="btn btn-primary">C</button>
+        <button class="btn btn-primary">D</button>
+      </div>
+
+      <pre><div id="vote-tally"></div></pre>
+      <h4><div id="vote-message"></div></h4>
     </div>
-
-    <pre><div id="vote-tally"></div></pre>
-    <h4><div id="vote-message"></div></h4>
-
+  </div>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/client.js"></script>
   </body>

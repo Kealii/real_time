@@ -4,8 +4,8 @@ const app = express();
 const socketIo = require('socket.io');
 var port = process.env.PORT || 3000;
 var server = http.createServer(app);
-var votes = {};
 const io = socketIo(server);
+var votes = {};
 
 function countVotes(votes) {
     var voteCount = {

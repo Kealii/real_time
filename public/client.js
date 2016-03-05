@@ -9,10 +9,10 @@ socket.on('usersConnected', function (count) {
 });
 
 socket.on('voteCount', function (votes) {
-    voteTally.innerText =  '  ' + votes['A'];
-    voteTally.innerText += '  ' + votes['B'];
-    voteTally.innerText += '  ' + votes['C'];
-    voteTally.innerText += '  ' + votes['D'];
+    voteTally.innerText =  votes['A'];
+    voteTally.innerText += '   ' + votes['B'];
+    voteTally.innerText += '   ' + votes['C'];
+    voteTally.innerText += '   ' + votes['D'];
 });
 
 socket.on('voteMessage', function (vote) {
