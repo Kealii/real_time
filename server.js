@@ -4,6 +4,7 @@ const app = express();
 const socketIo = require('socket.io');
 var port = process.env.PORT || 3000;
 var server = http.createServer(app);
+var alwaysShowResults = false;
 const io = socketIo(server);
 var votes = {};
 var poll = {
@@ -49,6 +50,10 @@ io.on('connection', function (socket) {
     io.sockets.emit('usersConnected', io.engine.clientsCount);
     socket.emit('newPollMessage', poll);
     socket.emit('statusMessage', 'You have connected.');
+    console.log(alwaysShowResults)
+    if(alwaysShowResults) {
+        io.sockets.emit('voteCount', countVotes(votes));
+    }
     emitVoteCount();
 
     socket.on('message', function (channel, message) {
@@ -56,11 +61,20 @@ io.on('connection', function (socket) {
         if (channel === 'voteCast') {
             votes[socket.id] = message;
             socket.emit('voteMessage', message);
-            io.sockets.emit('voteCount', countVotes(votes));
+            if(alwaysShowResults) {
+                io.sockets.emit('voteCount', countVotes(votes));
+            } else {
+                Object.keys(votes).forEach(function(id) {
+                    console.log('i am in here with', id)
+                    io.to(id).emit('voteCount', countVotes(votes))
+                })
+            }
             emitVoteCount();
         }
         if (channel === 'newPoll') {
             io.sockets.emit('newPollMessage', message);
+            votes = {}
+            alwaysShowResults = message.alwaysShowResults;
             poll = {
                 question: message.question,
                 choices: {
@@ -70,6 +84,12 @@ io.on('connection', function (socket) {
                     choice4: message.choices.choice4
                 }
             };
+
+            if(alwaysShowResults) {
+                io.sockets.emit('voteCount', countVotes(votes));
+            } else {
+                socket.emit('voteCount', countVotes(votes));
+            }
         }
         if (channel === 'closePoll') {
             poll = {

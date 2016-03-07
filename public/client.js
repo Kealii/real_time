@@ -38,6 +38,7 @@ var showChoice = function(choiceId, choiceText) {
 }
 
 socket.on('newPollMessage', function (message) {
+    voteTally.innerText = ''
     var choices = document.getElementById('choices');
     var poll = document.getElementById('newPoll');
     if (message.question === null) {
@@ -68,13 +69,15 @@ newPoll.addEventListener('submit', function (event) {
     var choice2 = document.getElementById('choice2').value;
     var choice3 = document.getElementById('choice3').value;
     var choice4 = document.getElementById('choice4').value;
+    var checkbox = document.getElementById('show-results').checked;
     socket.send('newPoll', { question: question,
                              choices: {
                                  choice1: choice1,
                                  choice2: choice2,
                                  choice3: choice3,
                                  choice4: choice4
-                             }
+                             },
+                            alwaysShowResults: checkbox
                            });
     event.stopPropagation();
     event.preventDefault();
