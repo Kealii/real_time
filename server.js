@@ -19,32 +19,15 @@ var poll = {
 var currentTimeout = null;
 var pollEnded = false;
 
-function countVotes(votes) {
-    var voteCount = {
-        A: 0,
-        B: 0,
-        C: 0,
-        D: 0
-    };
-    for (var vote in votes) {
-        voteCount[votes[vote]]++
-    }
-    return voteCount;
-}
-
-server.listen(port, function () {
-    console.log('Listening on port ' + port);
-});
+server.listen(port, function () { console.log('Listening on port ' + port); });
 
 app.use(express.static('public'));
-
 app.get('/', function (request, response) {
     response.sendFile(__dirname + '/public/index.html');
 });
 
-
 io.on('connection', function (socket) {
-    var emitVoteCount = function () {
+    var emitVoterCount = function () {
         io.sockets.emit('voteTotal', Object.keys(votes).length, io.engine.clientsCount);
     };
 
@@ -54,21 +37,14 @@ io.on('connection', function (socket) {
         io.sockets.emit('voteCount', countVotes(votes));
     };
 
-    console.log('A user has connected.', io.engine.clientsCount);
     io.sockets.emit('usersConnected', io.engine.clientsCount);
     socket.emit('newPollMessage', poll);
     socket.emit('statusMessage', 'You have connected.');
-    console.log(alwaysShowResults);
-    if(alwaysShowResults) {
-        io.sockets.emit('voteCount', countVotes(votes));
-    }
-    emitVoteCount();
-    if(pollEnded) {
-        closePoll();
-    }
+    emitVoterCount();
+    if(alwaysShowResults) { io.sockets.emit('voteCount', countVotes(votes)); }
+    if(pollEnded) { closePoll(); }
 
     socket.on('message', function (channel, message) {
-        console.log(channel);
         if (channel === 'voteCast') {
             votes[socket.id] = message;
             socket.emit('voteMessage', message);
@@ -79,11 +55,10 @@ io.on('connection', function (socket) {
                     io.to(id).emit('voteCount', countVotes(votes))
                 })
             }
-            emitVoteCount();
+            emitVoterCount();
         }
         if (channel === 'newPoll') {
             pollEnded = false;
-
             clearTimeout(currentTimeout);
             currentTimeout = null;
             io.sockets.emit('newPollMessage', message);
@@ -117,12 +92,23 @@ io.on('connection', function (socket) {
 
 
     socket.on('disconnect', function () {
-        console.log('A user has disconnected.', io.engine.clientsCount);
         delete votes[socket.id];
-        console.log(votes);
-        emitVoteCount();
+        emitVoterCount();
         io.sockets.emit('usersConnected', io.engine.clientsCount);
     });
 });
+
+var countVotes = function (votes) {
+    var voteCount = {
+        A: 0,
+        B: 0,
+        C: 0,
+        D: 0
+    };
+    for (var vote in votes) {
+        voteCount[votes[vote]]++
+    }
+    return voteCount;
+};
 
 module.exports = server;
