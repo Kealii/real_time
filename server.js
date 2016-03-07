@@ -6,6 +6,7 @@ var port = process.env.PORT || 3000;
 var server = http.createServer(app);
 const io = socketIo(server);
 var votes = {};
+var pollQuestion = {question: 'Create a New Poll'};
 
 function countVotes(votes) {
     var voteCount = {
@@ -33,15 +34,22 @@ app.get('/', function (request, response) {
 io.on('connection', function (socket) {
     console.log('A user has connected.', io.engine.clientsCount);
     io.sockets.emit('usersConnected', io.engine.clientsCount);
+    socket.emit('newPollMessage', pollQuestion);
     socket.emit('statusMessage', 'You have connected.');
 
     socket.on('message', function (channel, message) {
+        console.log(channel);
         if (channel === 'voteCast') {
             votes[socket.id] = message;
             socket.emit('voteMessage', message);
             socket.emit('voteCount', countVotes(votes));
         }
+        if (channel === 'newPoll') {
+            io.sockets.emit('newPollMessage', message);
+            pollQuestion = {question: message.question};
+        }
     });
+
 
     socket.on('disconnect', function () {
         console.log('A user has disconnected.', io.engine.clientsCount);

@@ -6,11 +6,12 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
   </head>
   <body class="text-center">
-  <div class="container">
+
+  <div class="container" id="voteButtons">
     <div class="well">
       <h3>Welcome to CrowdSource</h3>
       <div id="connection-count"></div>
-      <h5>Insert Poll Question here.</h5>
+      <h5 id="poll-question">Insert Poll Question here.</h5>
       <h5>Click a button to vote!</h5>
       <br>
 
@@ -25,6 +26,27 @@
       <h4><div id="vote-message"></div></h4>
     </div>
   </div>
+
+  <div class="container" id="newPoll">
+    <div id="well">
+      <section>
+        <h3 class="text-center">Create a New Poll!</h3>
+        <form id="newPollForm">
+          <div class='well'>
+            <input required type='text' name='question' placeholder='What do you want to ask?' class='form-control' id='question'>
+          </div>
+          <div class='well'>
+            <input required type='text' placeholder='Put your responses here.' class='form-control'><br>
+            <input required type='text' placeholder='The first two are required.' class='form-control'><br>
+            <input type='text' placeholder='Optional additional response.' class='form-control'><br>
+            <input type='text' placeholder='Optional additional response.' class='form-control'><br>
+            <input type='submit' class='btn btn-primary'>
+          </div>
+        </form>
+      </section>
+    </div>
+  </div>
+
     <script src="/socket.io/socket.io.js"></script>
     <script src="/client.js"></script>
   </body>
