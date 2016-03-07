@@ -27,6 +27,12 @@ socket.on('voteTotal', function (votes, userCount) {
     voteCount.innerText = votes + ' / ' + userCount
 });
 
+socket.on('closePollMessage', function () {
+    for(var i=0; i < buttons.length;i++) {
+        buttons[i].classList.add('hide');
+    }
+});
+
 var showChoice = function(choiceId, choiceText) {
     var choice = document.getElementById(choiceId);
     if(choiceText) {
@@ -38,6 +44,10 @@ var showChoice = function(choiceId, choiceText) {
 }
 
 socket.on('newPollMessage', function (message) {
+    for(var i=0; i < buttons.length;i++) {
+        buttons[i].classList.remove('hide');
+    }
+
     voteTally.innerText = ''
     var choices = document.getElementById('choices');
     var poll = document.getElementById('newPoll');
@@ -69,7 +79,8 @@ newPoll.addEventListener('submit', function (event) {
     var choice2 = event.target.choice2.value;
     var choice3 = event.target.choice3.value;
     var choice4 = event.target.choice4.value;
-    var checkbox = document.getElementById('show-results').checked;
+    var duration = event.target['poll-duration'].value;
+    var checkbox = event.target['show-results'].checked;
     socket.send('newPoll', { question: question,
                              choices: {
                                  choice1: choice1,
@@ -77,6 +88,7 @@ newPoll.addEventListener('submit', function (event) {
                                  choice3: choice3,
                                  choice4: choice4
                              },
+                            duration: duration,
                             alwaysShowResults: checkbox
                            });
     event.stopPropagation();

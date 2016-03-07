@@ -16,6 +16,8 @@ var poll = {
         choice4: 'Choice 4'
     }
 };
+var currentTimeout = null;
+var pollEnded = false;
 
 function countVotes(votes) {
     var voteCount = {
@@ -46,15 +48,24 @@ io.on('connection', function (socket) {
         io.sockets.emit('voteTotal', Object.keys(votes).length, io.engine.clientsCount);
     };
 
+    var closePoll = function() {
+        pollEnded = true;
+        io.sockets.emit('closePollMessage');
+        io.sockets.emit('voteCount', countVotes(votes));
+    };
+
     console.log('A user has connected.', io.engine.clientsCount);
     io.sockets.emit('usersConnected', io.engine.clientsCount);
     socket.emit('newPollMessage', poll);
     socket.emit('statusMessage', 'You have connected.');
-    console.log(alwaysShowResults)
+    console.log(alwaysShowResults);
     if(alwaysShowResults) {
         io.sockets.emit('voteCount', countVotes(votes));
     }
     emitVoteCount();
+    if(pollEnded) {
+        closePoll();
+    }
 
     socket.on('message', function (channel, message) {
         console.log(channel);
@@ -65,15 +76,18 @@ io.on('connection', function (socket) {
                 io.sockets.emit('voteCount', countVotes(votes));
             } else {
                 Object.keys(votes).forEach(function(id) {
-                    console.log('i am in here with', id)
                     io.to(id).emit('voteCount', countVotes(votes))
                 })
             }
             emitVoteCount();
         }
         if (channel === 'newPoll') {
+            pollEnded = false;
+
+            clearTimeout(currentTimeout);
+            currentTimeout = null;
             io.sockets.emit('newPollMessage', message);
-            votes = {}
+            votes = {};
             alwaysShowResults = message.alwaysShowResults;
             poll = {
                 question: message.question,
@@ -85,6 +99,11 @@ io.on('connection', function (socket) {
                 }
             };
 
+            if(message.duration) {
+                var timeout = parseInt(message.duration) * 60 * 1000;
+                currentTimeout = setTimeout(closePoll, timeout);
+            }
+
             if(alwaysShowResults) {
                 io.sockets.emit('voteCount', countVotes(votes));
             } else {
@@ -92,11 +111,7 @@ io.on('connection', function (socket) {
             }
         }
         if (channel === 'closePoll') {
-            poll = {
-                question: null,
-                choices: null
-            };
-            io.sockets.emit('newPollMessage', poll);
+            closePoll();
         }
     });
 
