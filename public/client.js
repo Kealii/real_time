@@ -64,11 +64,11 @@ for (var i = 0; i < buttons.length; i++) {
 }
 
 newPoll.addEventListener('submit', function (event) {
-    var question = document.getElementById('question').value;
-    var choice1 = document.getElementById('choice1').value;
-    var choice2 = document.getElementById('choice2').value;
-    var choice3 = document.getElementById('choice3').value;
-    var choice4 = document.getElementById('choice4').value;
+    var question = event.target.question.value;
+    var choice1 = event.target.choice1.value;
+    var choice2 = event.target.choice2.value;
+    var choice3 = event.target.choice3.value;
+    var choice4 = event.target.choice4.value;
     var checkbox = document.getElementById('show-results').checked;
     socket.send('newPoll', { question: question,
                              choices: {
