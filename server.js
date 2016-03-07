@@ -2,6 +2,9 @@ const http = require('http');
 const express = require('express');
 const app = express();
 const socketIo = require('socket.io');
+const twilio = require('twilio');
+var client = new twilio.RestClient('AC9ea82f3d07b4471412ee445a10359da0',
+                                   '07f215cababef9165a28f9e54aed3d4c');
 var port = process.env.PORT || 3000;
 var server = http.createServer(app);
 var alwaysShowResults = false;
@@ -58,6 +61,7 @@ io.on('connection', function (socket) {
             emitVoterCount();
         }
         if (channel === 'newPoll') {
+            io.sockets.emit('closePoll');
             pollEnded = false;
             clearTimeout(currentTimeout);
             currentTimeout = null;
@@ -87,8 +91,27 @@ io.on('connection', function (socket) {
         }
         if (channel === 'closePoll') {
             closePoll();
+            sendText();
         }
     });
+
+    var sendText = function () {
+        client.sms.messages.create({
+            to: '+13035492649',
+            from: '+17205230301',
+            body: 'Poll is Over'
+        }, function(error, message) {
+            if (!error) {
+                console.log('Success! The SID for this SMS message is:');
+                console.log(message.sid);
+                console.log('Message sent on:');
+                console.log(message.dateCreated);
+            } else {
+                console.log('Oops! There was an error.');
+            }
+        });
+
+    }
 
 
     socket.on('disconnect', function () {
