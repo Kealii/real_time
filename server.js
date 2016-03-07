@@ -30,22 +30,12 @@ app.get('/', function (request, response) {
 });
 
 io.on('connection', function (socket) {
-    var emitVoterCount = function () {
-        io.sockets.emit('voteTotal', Object.keys(votes).length, io.engine.clientsCount);
-    };
-
-    var closePoll = function() {
-        pollEnded = true;
-        io.sockets.emit('closePollMessage');
-        io.sockets.emit('voteCount', countVotes(votes));
-    };
-
     io.sockets.emit('usersConnected', io.engine.clientsCount);
     socket.emit('newPollMessage', poll);
     socket.emit('statusMessage', 'You have connected.');
     emitVoterCount();
-    if(alwaysShowResults) { io.sockets.emit('voteCount', countVotes(votes)); }
-    if(pollEnded) { closePoll(); }
+    if (alwaysShowResults) { io.sockets.emit('voteCount', countVotes(votes)); }
+    if (pollEnded) { closePoll(); }
 
     socket.on('message', function (channel, message) {
         if (channel === 'voteCast') {
@@ -60,6 +50,7 @@ io.on('connection', function (socket) {
             }
             emitVoterCount();
         }
+
         if (channel === 'newPoll') {
             io.sockets.emit('closePoll');
             pollEnded = false;
@@ -89,30 +80,11 @@ io.on('connection', function (socket) {
                 socket.emit('voteCount', countVotes(votes));
             }
         }
+
         if (channel === 'closePoll') {
             closePoll();
-            sendText();
         }
     });
-
-    var sendText = function () {
-        client.sms.messages.create({
-            to: '+13035492649',
-            from: '+17205230301',
-            body: 'Poll is Over'
-        }, function(error, message) {
-            if (!error) {
-                console.log('Success! The SID for this SMS message is:');
-                console.log(message.sid);
-                console.log('Message sent on:');
-                console.log(message.dateCreated);
-            } else {
-                console.log('Oops! There was an error.');
-            }
-        });
-
-    }
-
 
     socket.on('disconnect', function () {
         delete votes[socket.id];
@@ -120,6 +92,35 @@ io.on('connection', function (socket) {
         io.sockets.emit('usersConnected', io.engine.clientsCount);
     });
 });
+
+var sendText = function () {
+    client.sms.messages.create({
+        to: '+13035492649',
+        from: '+17205230301',
+        body: 'Poll is Over'
+    }, function(error, message) {
+        if (!error) {
+            console.log('Success! The SID for this SMS message is:');
+            console.log(message.sid);
+            console.log('Message sent on:');
+            console.log(message.dateCreated);
+        } else {
+            console.log('Oops! There was an error.');
+        }
+    });
+
+};
+
+var emitVoterCount = function () {
+    io.sockets.emit('voteTotal', Object.keys(votes).length, io.engine.clientsCount);
+};
+
+var closePoll = function() {
+    pollEnded = true;
+    io.sockets.emit('closePollMessage');
+    io.sockets.emit('voteCount', countVotes(votes));
+    sendText();
+};
 
 var countVotes = function (votes) {
     var voteCount = {
