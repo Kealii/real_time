@@ -5,21 +5,40 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
   </head>
-  <body class="text-center">
+  <body>
 
   <div class="container" id="voteButtons">
     <div class="well">
-      <h3>Welcome to CrowdSource</h3>
-      <div id="connection-count"></div>
-      <h5 id="poll-question">Insert Poll Question here.</h5>
-      <h5>Click a button to vote!</h5>
+      <div class="text-center">
+        <h3>Welcome to CrowdSource</h3>
+        <div id="connection-count"></div>
+        <h5 id="poll-question">Insert Poll Question here.</h5>
+        <h5>Click a button to vote!</h5>
+      </div>
       <br>
 
       <div id="choices">
-        <button class="btn btn-primary">A</button>
-        <button class="btn btn-primary">B</button>
-        <button class="btn btn-primary">C</button>
-        <button class="btn btn-primary">D</button>
+        <ul>
+          <li>
+            <button class="btn btn-primary">A</button>
+            <span id="choiceText1"></span>
+          </li>
+          <br>
+          <li>
+            <button class="btn btn-primary">B</button>
+            <span id="choiceText2"></span>
+          </li>
+          <br>
+          <li>
+            <button class="btn btn-primary">C</button>
+            <span id="choiceText3"></span>
+          </li>
+          <br>
+          <li>
+            <button class="btn btn-primary">D</button>
+            <span id="choiceText4"></span>
+          </li>
+        </ul>
       </div>
 
       <pre><div id="vote-tally"></div></pre>
@@ -36,10 +55,10 @@
             <input required type='text' name='question' placeholder='What do you want to ask?' class='form-control' id='question'>
           </div>
           <div class='well'>
-            <input required type='text' placeholder='Put your responses here.' class='form-control'><br>
-            <input required type='text' placeholder='The first two are required.' class='form-control'><br>
-            <input type='text' placeholder='Optional additional response.' class='form-control'><br>
-            <input type='text' placeholder='Optional additional response.' class='form-control'><br>
+            <input required type='text' placeholder='Put your responses here.' class='form-control' id='choice1'><br>
+            <input required type='text' placeholder='The first two are required.' class='form-control' id='choice2'><br>
+            <input type='text' placeholder='Optional additional response.' class='form-control' id='choice3'><br>
+            <input type='text' placeholder='Optional additional response.' class='form-control' id='choice4'><br>
             <input type='submit' class='btn btn-primary'>
           </div>
         </form>

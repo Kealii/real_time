@@ -22,8 +22,15 @@ socket.on('voteMessage', function (vote) {
 
 socket.on('newPollMessage', function (message) {
     var newQuestion = document.getElementById('poll-question');
+    var choice1 = document.getElementById('choiceText1');
+    var choice2 = document.getElementById('choiceText2');
+    var choice3 = document.getElementById('choiceText3');
+    var choice4 = document.getElementById('choiceText4');
     newQuestion.innerText = message.question;
-    8
+    choice1.innerText = message.choices.choice1;
+    choice2.innerText = message.choices.choice2;
+    choice3.innerText = message.choices.choice3;
+    choice4.innerText = message.choices.choice4;
 });
 
 for (var i = 0; i < buttons.length; i++) {
@@ -34,7 +41,18 @@ for (var i = 0; i < buttons.length; i++) {
 
 newPoll.addEventListener('submit', function (event) {
     var question = document.getElementById('question').value;
-    socket.send('newPoll', {question: question});
+    var choice1 = document.getElementById('choice1').value;
+    var choice2 = document.getElementById('choice2').value;
+    var choice3 = document.getElementById('choice3').value;
+    var choice4 = document.getElementById('choice4').value;
+    socket.send('newPoll', { question: question,
+                             choices: {
+                                 choice1: choice1,
+                                 choice2: choice2,
+                                 choice3: choice3,
+                                 choice4: choice4
+                             }
+                           });
     event.stopPropagation();
     event.preventDefault();
 });

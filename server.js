@@ -6,7 +6,13 @@ var port = process.env.PORT || 3000;
 var server = http.createServer(app);
 const io = socketIo(server);
 var votes = {};
-var pollQuestion = {question: 'Create a New Poll'};
+var poll = {question: 'Create a New Poll',
+            choices: {
+                choice1: 'Choice 1',
+                choice2: 'Choice 2',
+                choice3: 'Choice 3',
+                choice4: 'Choice 4'
+            }};
 
 function countVotes(votes) {
     var voteCount = {
@@ -34,7 +40,7 @@ app.get('/', function (request, response) {
 io.on('connection', function (socket) {
     console.log('A user has connected.', io.engine.clientsCount);
     io.sockets.emit('usersConnected', io.engine.clientsCount);
-    socket.emit('newPollMessage', pollQuestion);
+    socket.emit('newPollMessage', poll);
     socket.emit('statusMessage', 'You have connected.');
 
     socket.on('message', function (channel, message) {
@@ -46,7 +52,13 @@ io.on('connection', function (socket) {
         }
         if (channel === 'newPoll') {
             io.sockets.emit('newPollMessage', message);
-            pollQuestion = {question: message.question};
+            poll = {question: message.question,
+                    choices: {
+                        choice1: message.choices.choice1,
+                        choice2: message.choices.choice2,
+                        choice3: message.choices.choice3,
+                        choice4: message.choices.choice4
+                    }};
         }
     });
 
