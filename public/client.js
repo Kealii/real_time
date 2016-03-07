@@ -27,6 +27,16 @@ socket.on('voteTotal', function (votes, userCount) {
     voteCount.innerText = votes + ' / ' + userCount
 });
 
+var showChoice = function(choiceId, choiceText) {
+    var choice = document.getElementById(choiceId);
+    if(choiceText) {
+        choice.getElementsByTagName('span')[0].innerText = choiceText;
+        choice.classList.remove('hide');
+    } else {
+        choice.classList.add('hide');
+    }
+}
+
 socket.on('newPollMessage', function (message) {
     var choices = document.getElementById('choices');
     var poll = document.getElementById('newPoll');
@@ -34,15 +44,13 @@ socket.on('newPollMessage', function (message) {
         choices.classList.add('hide');
     } else {
         var newQuestion = document.getElementById('poll-question');
-        var choice1 = document.getElementById('choiceText1');
-        var choice2 = document.getElementById('choiceText2');
-        var choice3 = document.getElementById('choiceText3');
-        var choice4 = document.getElementById('choiceText4');
         newQuestion.innerText = message.question;
-        choice1.innerText = message.choices.choice1;
-        choice2.innerText = message.choices.choice2;
-        choice3.innerText = message.choices.choice3;
-        choice4.innerText = message.choices.choice4;
+
+        showChoice('choiceText1', message.choices.choice1);
+        showChoice('choiceText2', message.choices.choice2);
+        showChoice('choiceText3', message.choices.choice3);
+        showChoice('choiceText4', message.choices.choice4);
+
         poll.classList.add('hide');
         choices.classList.remove('hide');
     }
