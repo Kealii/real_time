@@ -5,6 +5,7 @@ var voteMessage = document.getElementById('vote-message');
 var voteTally = document.getElementById('vote-tally');
 var newPoll = document.getElementById('new-poll-form');
 var newPollButton = document.getElementById('new-poll-button');
+var endPollButton = document.getElementById('end-poll-button');
 
 socket.on('usersConnected', function (count) {
     connectionCount.innerText = 'Connected Users: ' + count;
@@ -22,16 +23,24 @@ socket.on('voteMessage', function (vote) {
 });
 
 socket.on('newPollMessage', function (message) {
-    var newQuestion = document.getElementById('poll-question');
-    var choice1 = document.getElementById('choiceText1');
-    var choice2 = document.getElementById('choiceText2');
-    var choice3 = document.getElementById('choiceText3');
-    var choice4 = document.getElementById('choiceText4');
-    newQuestion.innerText = message.question;
-    choice1.innerText = message.choices.choice1;
-    choice2.innerText = message.choices.choice2;
-    choice3.innerText = message.choices.choice3;
-    choice4.innerText = message.choices.choice4;
+    var choices = document.getElementById('choices');
+    var poll = document.getElementById('newPoll');
+    if (message.question === null) {
+        choices.classList.add('hide');
+    } else {
+        var newQuestion = document.getElementById('poll-question');
+        var choice1 = document.getElementById('choiceText1');
+        var choice2 = document.getElementById('choiceText2');
+        var choice3 = document.getElementById('choiceText3');
+        var choice4 = document.getElementById('choiceText4');
+        newQuestion.innerText = message.question;
+        choice1.innerText = message.choices.choice1;
+        choice2.innerText = message.choices.choice2;
+        choice3.innerText = message.choices.choice3;
+        choice4.innerText = message.choices.choice4;
+        poll.classList.add('hide');
+        choices.classList.remove('hide');
+    }
 });
 
 for (var i = 0; i < buttons.length; i++) {
@@ -58,7 +67,11 @@ newPoll.addEventListener('submit', function (event) {
     event.preventDefault();
 });
 
-newPollButton.addEventListener('click', function (){
+newPollButton.addEventListener('click', function () {
     var poll = document.getElementById('newPoll');
     poll.classList.toggle('hide');
+});
+
+endPollButton.addEventListener('click',function () {
+    socket.send('closePoll');
 });

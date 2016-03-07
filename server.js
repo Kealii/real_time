@@ -60,6 +60,11 @@ io.on('connection', function (socket) {
                         choice4: message.choices.choice4
                     }};
         }
+        if (channel === 'closePoll') {
+            poll = {question: null,
+                    choices: null};
+            io.sockets.emit('newPollMessage', poll);
+        }
     });
 
 

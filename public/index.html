@@ -13,12 +13,12 @@
         <h3>Welcome to CrowdSource</h3>
         <h5 id="connection-count"></h5>
         <button class="btn btn-primary" id="new-poll-button">Create New Poll</button>
-        <h5 id="poll-question">Insert Poll Question here.</h5>
-        <h5>Click a button to vote!</h5>
+        <button class="btn btn-danger" id="end-poll-button">End Poll</button>
       </div>
       <br>
 
-      <div id="choices">
+      <div class="container" id="choices">
+        <h3 id="poll-question"></h3><br>
         <ul>
           <li>
             <button class="btn btn-primary">A</button>
@@ -42,9 +42,9 @@
         </ul>
       </div>
 
-      <pre><div id="vote-tally"></div></pre>
       <h4><div id="vote-message"></div></h4>
     </div>
+    <pre><div id="vote-tally"></div></pre>
   </div>
 
   <div class="container hide" id="newPoll">
