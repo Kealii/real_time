@@ -3,7 +3,8 @@ var connectionCount = document.getElementById('connection-count');
 var buttons = document.querySelectorAll('#choices button');
 var voteMessage = document.getElementById('vote-message');
 var voteTally = document.getElementById('vote-tally');
-var newPoll = document.getElementById('newPollForm');
+var newPoll = document.getElementById('new-poll-form');
+var newPollButton = document.getElementById('new-poll-button');
 
 socket.on('usersConnected', function (count) {
     connectionCount.innerText = 'Connected Users: ' + count;
@@ -55,4 +56,9 @@ newPoll.addEventListener('submit', function (event) {
                            });
     event.stopPropagation();
     event.preventDefault();
+});
+
+newPollButton.addEventListener('click', function (){
+    var poll = document.getElementById('newPoll');
+    poll.classList.toggle('hide');
 });

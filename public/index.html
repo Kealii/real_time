@@ -11,7 +11,8 @@
     <div class="well">
       <div class="text-center">
         <h3>Welcome to CrowdSource</h3>
-        <div id="connection-count"></div>
+        <h5 id="connection-count"></h5>
+        <button class="btn btn-primary" id="new-poll-button">Create New Poll</button>
         <h5 id="poll-question">Insert Poll Question here.</h5>
         <h5>Click a button to vote!</h5>
       </div>
@@ -46,11 +47,11 @@
     </div>
   </div>
 
-  <div class="container" id="newPoll">
+  <div class="container hide" id="newPoll">
     <div id="well">
       <section>
         <h3 class="text-center">Create a New Poll!</h3>
-        <form id="newPollForm">
+        <form id="new-poll-form">
           <div class='well'>
             <input required type='text' name='question' placeholder='What do you want to ask?' class='form-control' id='question'>
           </div>
