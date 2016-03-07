@@ -6,6 +6,7 @@ var voteTally = document.getElementById('vote-tally');
 var newPoll = document.getElementById('new-poll-form');
 var newPollButton = document.getElementById('new-poll-button');
 var endPollButton = document.getElementById('end-poll-button');
+var voteCount = document.getElementById('vote-count');
 
 socket.on('usersConnected', function (count) {
     connectionCount.innerText = 'Connected Users: ' + count;
@@ -20,6 +21,10 @@ socket.on('voteCount', function (votes) {
 
 socket.on('voteMessage', function (vote) {
     voteMessage.innerText = 'Thanks for voting for ' + vote;
+});
+
+socket.on('voteTotal', function (votes, userCount) {
+    voteCount.innerText = votes + ' / ' + userCount
 });
 
 socket.on('newPollMessage', function (message) {
